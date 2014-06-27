@@ -6,5 +6,103 @@ GDB设置命令行参数:
      (gdb) set args arg1 arg2 ...
 上述两步操作必须要在程序未运行起来之前，或是在程序运行起来之时进行赋值，如若会出现不生效的情况。
 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+命令行参数的传入：
+两种方法：
+1。run ＋ 命令行
+run -p 123
+Starting program: /root/test/a.out -p 123
+opt:123
+
+Program exited normally.
+
+2。set args ＋ 命令行
+(gdb) set args -p 456
+(gdb) run 
+Starting program: /root/test/a.out -p 456
+opt:456
+
+Program exited normally.
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+查看程序的状态：
+info grogram
+(gdb) info program 
+        Using the running image of child process 22717.
+Program stopped at 0x4004e7.
+It stopped at a breakpoint that has since been deleted.
+(gdb) 
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+观察点设置：
+
+(gdb) start 
+Temporary breakpoint 1 at 0x4004e7: file pool4watch.c, line 7.
+Starting program: /root/test/a.out 
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffea58) at pool4watch.c:7
+7               for (i = 0; i < 5; i++) 
+(gdb) info program 
+        Using the running image of child process 29284.
+Program stopped at 0x4004e7.
+It stopped at a breakpoint that has since been deleted.
+(gdb) list
+2
+3       int main(int argc, char *argv[])
+4       {
+5               int i;
+6               int j;
+7               for (i = 0; i < 5; i++)
+8               {
+9                       fprintf(stdout, "i :%d", i);
+10                      j++;
+11                      fprintf(stdout, "j :%d\n", j);
+(gdb) watch 10
+Cannot watch constant value 10.
+(gdb) break 10
+Breakpoint 2 at 0x400509: file pool4watch.c, line 10.
+(gdb) run 
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /root/test/a.out 
+
+Breakpoint 2, main (argc=1, argv=0x7fffffffea58) at pool4watch.c:10
+10                      j++;
+(gdb) watch j
+Hardware watchpoint 3: j
+(gdb) c
+Continuing.
+i :0j :1
+
+Breakpoint 2, main (argc=1, argv=0x7fffffffea58) at pool4watch.c:10
+10                      j++;
+(gdb) print j
+$1 = 1
+(gdb) c
+Continuing.
+i :1j :2
+
+Breakpoint 2, main (argc=1, argv=0x7fffffffea58) at pool4watch.c:10
+10                      j++;
+(gdb) print j
+$2 = 2
+(gdb) 
+
+＝＝＝＝＝＝＝＝＝＝＝
+使用watch时步骤如下：
+
+1. 使用break在要观察的变量所在处设置断电；
+
+2. 使用run执行，直到断点；
+
+3. 使用watch设置观察点；
+
+4. 使用continue观察设置的观察点是否有变化。
+
+注意，以上步骤前三步为一次性的设置，而第四步为成寻运行起来之后，在程序停在断点的时候让程序继续运行的设置。
+
+
 
 
