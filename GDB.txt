@@ -103,6 +103,93 @@ $2 = 2
 
 注意，以上步骤前三步为一次性的设置，而第四步为成寻运行起来之后，在程序停在断点的时候让程序继续运行的设置。
 
+＝＝＝＝＝＝＝＝＝＝＝
+gdb 在断点打印,分别为设置断点号方法和不设置断点号方法：
 
+1.设置断点号码的方法：
 
+(gdb) break 9
+Breakpoint 36 at 0x400510: file pool4watch.c, line 9.
+(gdb) commands 36
+Type commands for when breakpoint 36 is hit, one per line.
+End with a line saying just "end".
+>printf "i:%d\n",i
+>continue
+>end
+(gdb) run
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
 
+Breakpoint 36, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i:0
+i :0,j :1
+
+Breakpoint 36, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i:1
+i :1,j :2
+
+Breakpoint 36, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i:2
+i :2,j :3
+
+Breakpoint 36, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i:3
+i :3,j :4
+
+Breakpoint 36, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i:4
+i :4,j :5
+
+Program exited normally.
+(gdb) 
+
+2.不设置断点号的方法，新设置的commadn命令，会自动查找最近设置的断点号，并附加其上：
+(gdb) break 9
+Breakpoint 1 at 0x400510: file pool4watch.c, line 9.
+(gdb) commands 
+Type commands for when breakpoint 1 is hit, one per line.
+End with a line saying just "end".
+>printf "i :%d\n",i
+>continue
+>end
+(gdb) run 
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i :0
+i :0,j :1
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i :1
+i :1,j :2
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i :2
+i :2,j :3
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i :3
+i :3,j :4
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:9
+9                       j++;
+i :4
+i :4,j :5
+
+Program exited normally.
+(gdb) 
+(gdb) info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000400510 in main at pool4watch.c:9
+        breakpoint already hit 5 times
+        printf "i :%d\n",i
+        continue
+(gdb) 
