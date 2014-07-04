@@ -1134,5 +1134,94 @@ i :4,j :5
 
 Program exited normally.
 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+until 或 u
+    当你厌倦了在一个循环体内单步跟踪时，这个命令可以运行程序直到退出循环体。
+
+(gdb) start 
+Temporary breakpoint 2 at 0x400522: file pool4watch.c, line 14.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 2, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:14
+14              int i, j = 0;
+(gdb) u
+16              watch_variable_another();
+(gdb) u
+k:0
+k:1
+k:2
+k:3
+k:4
+18              for (i = 0; i < 5; i++)
+(gdb) u
+20                      fprintf(stdout, "i :%d,", i);
+(gdb) u
+21                      j++;
+(gdb) u
+22                      fprintf(stdout, "j :%d\n", j);
+(gdb) u
+i :0,j :1
+18              for (i = 0; i < 5; i++)
+(gdb) u
+i :1,j :2
+i :2,j :3
+i :3,j :4
+i :4,j :5
+25              return 0;
+(gdb) 
 
 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+stepi 或 si
+nexti 或 ni
+    单步跟踪一条机器指令！一条程序代码有可能由数条机器指令完成，stepi和nexti可以单步执行机器指令。与之一样有相同功能的命令是 “display/i $pc” ，当运行完这个命令后，单步跟踪会在打出程序代码的同时打出机器指令（也就是汇编代码） 
+
+(gdb) start 
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Temporary breakpoint 5 at 0x400522: file pool4watch.c, line 14.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 5, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:14
+14              int i, j = 0;
+(gdb) stepi
+16              watch_variable_another();
+(gdb) stepi
+watch_variable_another () at pool4watch.c:4
+4       {
+(gdb) stepi
+0x00000000004004d9      4       {
+(gdb) stepi
+0x00000000004004dc      4       {
+(gdb) stepi
+6               for (k = 0; k < 5; k++)
+(gdb) stepi
+0x00000000004004e7      6               for (k = 0; k < 5; k++)
+(gdb) stepi
+0x0000000000400506      6               for (k = 0; k < 5; k++)
+(gdb) stepi
+0x000000000040050a      6               for (k = 0; k < 5; k++)
+(gdb) stepi
+8                       fprintf(stdout, "k:%d\n", k);
+(gdb) stepi
+0x00000000004004f0      8                       fprintf(stdout, "k:%d\n", k);
+(gdb) stepi
+0x00000000004004f3      8                       fprintf(stdout, "k:%d\n", k);
+(gdb) c
+Continuing.
+k:0
+k:1
+k:2
+k:3
+k:4
+i :0,j :1
+i :1,j :2
+i :2,j :3
+i :3,j :4
+i :4,j :5
+
+Program exited normally.
+(gdb) 
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
