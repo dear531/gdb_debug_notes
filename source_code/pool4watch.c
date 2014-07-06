@@ -12,8 +12,9 @@ int watch_variable_another(void)
 int main(int argc, char *argv[])
 {
 	int i, j = 0;
+	int ret;
 
-	watch_variable_another();
+	ret = watch_variable_another();
 
 	for (i = 0; i < 5; i++)
 	{

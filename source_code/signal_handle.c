@@ -3,10 +3,13 @@
 #include <signal.h>
 #include <errno.h>
 
+int flag = 0;
+
 void sig_int(int signum)
 {
-	int err = errno;
-	errno = err;
+	int err	= errno;
+	flag	= 1;
+	errno	= err;
 	return;
 }
 

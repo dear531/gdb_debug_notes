@@ -2004,4 +2004,578 @@ Num Enb Expression
 2:   y  a
 (gdb) 
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+设置变量的值：
+(gdb) list
+1       #include <stdio.h>
+2
+3       int
+4       main (int argc, char *argv[])
+5       {
+6               int a[10] = {0};
+7               int i;
+8               for (i = 0; i < sizeof (a) / sizeof (*a); i++)
+9                       fprintf(stdout, "a[%d]:%d\n", i, a[i]);
+10              for (i = 0; i < sizeof (a) / sizeof (*a); i++)
+(gdb) list
+11                      a[i] = i;
+12              for (i = 0; i < sizeof (a) / sizeof (*a); i++)
+13                      fprintf(stdout, "a[%d]:%d\n", i, a[i]);
+14
+15              return 0;
+16      }
+(gdb) u
+a[5]:0
+a[6]:0
+a[7]:0
+a[8]:0
+a[9]:0
+10              for (i = 0; i < sizeof (a) / sizeof (*a); i++)
+1: a = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+(gdb) set variable a={2,3,4,5,6,7,8,9,10,11}
+(gdb) set variable a[0]=2*3
+(gdb) n
+11                      a[i] = i;
+1: a = {6, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+设置显示选项
+
+GDB中关于显示的选项比较多，这里我只例举大多数常用的选项。
+
+set print address
+set print address on
+    打开地址输出，当程序显示函数信息时，GDB会显出函数的参数地址。系统默认为打开的，如： 
+
+(gdb) f
+#0  set_quotes (lq=0x34c78 "<<", rq=0x34c88 ">>")
+    at input.c:530
+530         if (lquote != def_lquote)
+
+set print address off
+    关闭函数的参数地址显示，如： 
+
+(gdb) set print addr off
+(gdb) f
+#0  set_quotes (lq="<<", rq=">>") at input.c:530
+530         if (lquote != def_lquote)
+
+show print address
+    查看当前地址显示选项是否打开。 
+
+set print array
+set print array on
+    打开数组显示，打开后当数组显示时，每个元素占一行，如果不打开的话，每个元素则以逗号分隔。这个选项默认是关闭的。与之相关的两个命令如下，我就不再多说了。 
+
+set print array off
+show print array
+set print elements <number-of-elements>
+    这个选项主要是设置数组的，如果你的数组太大了，那么就可以指定一个<number-of-elements>来指定数据显示的最大长度，当到达这个长度时，GDB就不再往下显示了。如果设置为0，则表示不限制。 
+
+show print elements
+    查看print elements的选项信息。 
+
+set print null-stop <on/off>
+    如果打开了这个选项，那么当显示字符串时，遇到结束符则停止显示。这个选项默认为off。 
+
+set print pretty on
+    如果打开printf pretty这个选项，那么当GDB显示结构体时会比较漂亮。如： 
+
+$1 = {
+  next = 0x0,
+  flags = {
+    sweet = 1,
+    sour = 1
+  },
+  meat = 0x54 "Pork"
+}
+
+set print pretty off
+    关闭printf pretty这个选项，GDB显示结构体时会如下显示： 
+
+$1 = {next = 0x0, flags = {sweet = 1, sour = 1}, meat = 0x54 "Pork"}
+          
+
+show print pretty
+    查看GDB是如何显示结构体的。 
+
+set print sevenbit-strings <on/off>
+    设置字符显示，是否按“\nnn”的格式显示，如果打开，则字符串或字符数据按\nnn显示，如“\065”。 
+
+show print sevenbit-strings
+    查看字符显示开关是否打开。 
+
+set print union <on/off>
+    设置显示结构体时，是否显式其内的联合体数据。例如有以下数据结构： 
+
+typedef enum {Tree, Bug} Species;
+typedef enum {Big_tree, Acorn, Seedling} Tree_forms;
+typedef enum {Caterpillar, Cocoon, Butterfly}
+              Bug_forms;
+
+struct thing {
+  Species it;
+  union {
+    Tree_forms tree;
+    Bug_forms bug;
+  } form;
+};
+
+struct thing foo = {Tree, {Acorn}};
+
+当打开这个开关时，执行 p foo 命令后，会如下显示：
+
+$1 = {it = Tree, form = {tree = Acorn, bug = Cocoon}}
+      
+
+当关闭这个开关时，执行 p foo 命令后，会如下显示：
+
+$1 = {it = Tree, form = {...}}
+
+show print union
+    查看联合体数据的显示方式 
+
+    set print object
+<on/off>:在C++中，如果一个对象指针指向其派生类，如果打开这个选项，GDB会自动按照虚方法调用的规则显示输出，如果关闭这个选项的话，GDB就不管虚函数表了。这个选项默认是off。 
+
+show print object
+    查看对象选项的设置。 
+
+set print static-members <on/off>
+    这个选项表示，当显示一个C++对象中的内容是，是否显示其中的静态数据成员。默认是on。 
+
+show print static-members
+    查看静态数据成员选项设置。 
+
+set print vtbl <on/off>
+    当此选项打开时，GDB将用比较规整的格式来显示虚函数表时。其默认是关闭的。 
+
+show print vtbl
+    查看虚函数显示格式的选项
+(gdb) list
+1       #include <stdio.h>
+2
+3       int
+4       main (int argc, char *argv[])
+5       {
+6               struct{
+7                       int a;
+8                       int b;
+9               }s = {1, 2};
+10              fprintf(stdout, "s.a:%d, s.b:%d\n", s.a, s.b);
+(gdb) list
+11
+12              return 0;
+13      }
+(gdb) start 
+Temporary breakpoint 1 at 0x4004e7: file struct_print.c, line 9.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at struct_print.c:9
+9               }s = {1, 2};
+(gdb) p s
+$1 = {a = -5696, b = 32767}
+(gdb) show print pretty 
+Prettyprinting of structures is off.
+(gdb) set print pretty on
+(gdb) p s
+$2 = {
+  a = -5696, 
+  b = 32767
+}
+(gdb) set variable s={1,2}
+(gdb) print s
+$3 = {
+  a = 1, 
+  b = 2
+}
+(gdb) n
+10              fprintf(stdout, "s.a:%d, s.b:%d\n", s.a, s.b);
+(gdb) n
+s.a:1, s.b:2
+12              return 0;
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+历史记录
+
+当你用GDB的print查看程序运行时的数据时，你每一个print都会被GDB记录下来。GDB会以$1,
+$2, $3
+.....这样的方式为你每一个print命令编上号。于是，你可以使用这个编号访问以前的表达式，如$1。这个功能所带来的好处是，如果你先前输入了一个比较长的表达式，如果你还想查看这个表达式的值，你可以使用历史记录来访问，省去了重复输入。
+[编辑] GDB环境变量
+
+你可以在GDB的调试环境中定义自己的变量，用来保存一些调试程序中的运行数据。要定义一个GDB的变量很简单只需使用GDB的set命令。GDB的环境变量和UNIX一样，也是以$起头。如：
+
+set $foo = *object_ptr
+
+使用环境变量时，GDB会在你第一次使用时创建这个变量，而在以后的使用中，则直接对其赋值。环境变量没有类型，你可以给环境变量定义任一的类型。包括结构体和数组。
+
+show convenience
+    该命令查看当前所设置的所有的环境变量。 
+
+这是一个比较强大的功能，环境变量和程序变量的交互使用，将使得程序调试更为灵活便捷。例如：
+
+set $i = 0
+print bar[$i++]->contents
+
+于是，当你就不必，print bar[0]->contents, print
+bar[1]->contents地输入命令了。输入这样的命令后，只用敲回车，重复执行上一条语句，环境变量会自动累加，从而完成逐个输出的功能。 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+查看寄存器
+
+要查看寄存器的值，很简单，可以使用如下命令：
+
+info registers
+    查看寄存器的情况。（除了浮点寄存器） 
+
+info all-registers
+    查看所有寄存器的情况。（包括浮点寄存器） 
+
+info registers <regname ...>
+    查看所指定的寄存器的情况。 
+
+寄存器中放置了程序运行时的数据，比如程序当前运行的指令地址（ip），程序的当前堆栈地址（sp）等等。你同样可以使用print命令来访问寄存器的情况，只需要在寄存器名字前加一个$符号就可以了。如：p
+$eip。 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+改变程序的执行
+
+一旦使用GDB挂上被调试程序，当程序运行起来后，你可以根据自己的调试思路来动态地在GDB中更改当前被调试程序的运行线路或是其变量的值，这个强大的功能能够让你更好的调试你的程序，比如，你可以在程序的一次运行中走遍程序的所有分支。
+[编辑] 修改变量值
+
+修改被调试程序运行时的变量值，在GDB中很容易实现，使用GDB的 print
+命令即可完成。如：
+
+(gdb) print x=4
+
+x=4这个表达式是C/C++的语法，意为把变量x的值修改为4，如果你当前调试的语言是Pascal，那么你可以使用Pascal的语法：x:=4。
+
+在某些时候，很有可能你的变量和GDB中的参数冲突，如：
+
+(gdb) whatis width
+type = double
+(gdb) p width
+$4 = 13
+(gdb) set width=47
+Invalid syntax in expression.
+
+因为，set width是GDB的命令，所以，出现了“Invalid syntax in
+expression”的设置错误，此时，你可以使用set
+var命令来告诉GDB，width不是你GDB的参数，而是程序的变量名，如：
+
+(gdb) set var width=47
+
+另外，还可能有些情况，GDB并不报告这种错误，所以保险起见，在你改变程序变量取值时，最好都使用set
+var格式的GDB命令。 
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+跳转执行
+
+一般来说，被调试程序会按照程序代码的运行顺序依次执行。GDB提供了乱序执行的功能，也就是说，GDB可以修改程序的执行顺序，可以让程序执行随意跳跃。这个功能可以由GDB的jump命令来完：
+
+jump <linespec>
+    指定下一条语句的运行点。<linespce>可以是文件的行号，可以是file:line格式，可以是+num这种偏移量格式。表示着下一条运行语句从哪里开始。 
+
+jump <address>
+    这里的<address>是代码行的内存地址。 
+
+注意，jump命令不会改变当前的程序栈中的内容，所以，当你从一个函数跳到另一个函数时，当函数运行完返回时进行弹栈操作时必然会发生错误，可能结果还是非常奇怪的，甚至于产生程序Core
+Dump。所以最好是同一个函数中进行跳转。
+
+熟悉汇编的人都知道，程序运行时，有一个寄存器用于保存当前代码所在的内存地址。所以，jump命令也就是改变了这个寄存器中的值。于是，你可以使用“set
+$pc”来更改跳转执行的地址。如：
+
+set $pc = 0x485
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+(gdb) list
+1       #include <stdio.h>
+2
+3       int
+4       main (int argc, char *argv[])
+5       {
+6               struct{
+7                       int a;
+8                       int b;
+9               }s = {1, 2};
+10              fprintf(stdout, "s.a:%d, s.b:%d\n", s.a, s.b);
+(gdb) list
+11
+12              s.a = 3;
+13              s.a = 4;
+14
+15              fprintf(stdout, "s.a:%d, s.b:%d\n", s.a, s.b);
+16
+17              return 0;
+18      }
+(gdb) set print pretty on
+(gdb) display s
+
+(gdb) start 
+Temporary breakpoint 4 at 0x4004e7: file struct_print.c, line 9.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 4, main (argc=1, argv=0x7fffffffe9c8) at struct_print.c:9
+9               }s = {1, 2};
+1: s = {
+  a = -5696, 
+  b = 32767
+}
+(gdb) n
+10              fprintf(stdout, "s.a:%d, s.b:%d\n", s.a, s.b);
+1: s = {
+  a = 1, 
+  b = 2
+}
+(gdb) s
+s.a:1, s.b:2
+12              s.a = 3;
+1: s = {
+  a = 1, 
+  b = 2
+}
+(gdb) n
+13              s.a = 4;
+1: s = {
+  a = 3, 
+  b = 2
+}
+(gdb) jump 14
+Continuing at 0x40051f.
+s.a:3, s.b:2
+
+Program exited normally.
+由此得出结论：
+1。next下一步时显示出的代码是要下一条要执行的，即还没执行。
+2。jump命令执行的是，从跳转开始直接执行完到程序结尾的命令。
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+在不同语言中使用GDB
+
+GDB支持下列语言：C, C++, Fortran, PASCAL, Java, Chill, assembly, 和
+Modula-2。一般说来，GDB会根据你所调试的程序来确定当前的调试语言，比如：发现文件名后缀为“.c”的，GDB会认为是C程序。文件名后缀为
+“.C, .cc, .cp, .cpp, .cxx, .c++”的，GDB会认为是C++程序。而后缀是“.f,
+.F”的，GDB会认为是Fortran程序，还有，后缀为如果是“.s, .S”的会认为是汇编语言。
+
+也就是说，GDB会根据你所调试的程序的语言，来设置自己的语言环境，并让GDB的命令跟着语言环境的改变而改变。比如一些GDB命令需要用到表达式或变量时，这些表达式或变量的语法，完全是根据当前的语言环境而改变的。例如C/C++中对指针的语法是*p，而在Modula-2中则是p^。并且，如果你当前的程序是由几种不同语言一同编译成的，那到在调试过程中，GDB也能根据不同的语言自动地切换语言环境。这种跟着语言环境而改变的功能，真是体贴开发人员的一种设计。
+
+下面是几个相关于GDB语言环境的命令：
+
+show language
+    查看当前的语言环境。如果GDB不能识为你所调试的编程语言，那么，C语言被认为是默认的环境。 
+
+info frame
+    查看当前函数的程序语言。 
+
+info source
+    查看当前文件的程序语言。 
+
+如果GDB没有检测出当前的程序语言，那么你也可以手动设置当前的程序语言。使用set
+language命令即可做到。
+
+当set language命令后什么也不跟的话，你可以查看GDB所支持的语言种类：
+
+(gdb) set language
+The currently understood settings are:
+
+local or auto    Automatic setting based on source file
+c                Use the C language
+c++              Use the C++ language
+asm              Use the Asm language
+chill            Use the Chill language
+fortran          Use the Fortran language
+java             Use the Java language
+modula-2         Use the Modula-2 language
+pascal           Use the Pascal language
+scheme           Use the Scheme language
+
+于是你可以在set language后跟上被列出来的程序语言名，来设置当前的语言环境。 
+(gdb) show language 
+The current source language is "auto; currently c".
+(gdb) info frame 
+Stack level 0, frame at 0x7fffffffe8f0:
+ rip = 0x400511 in main (struct_print.c:12); saved rip 0x347861d994
+ source language c.
+ Arglist at 0x7fffffffe8e0, args: argc=1, argv=0x7fffffffe9c8
+ Locals at 0x7fffffffe8e0, Previous frame's sp is 0x7fffffffe8f0
+ Saved registers:
+  rbp at 0x7fffffffe8e0, rip at 0x7fffffffe8e8
+(gdb) info source
+Current source file is struct_print.c
+Compilation directory is /mnt/data/gdb_debug_notes/source_code
+Located in /mnt/data/gdb_debug_notes/source_code/struct_print.c
+Contains 13 lines.
+Source language is c.
+Compiled with DWARF 2 debugging format.
+Does not include preprocessor macro info.
+(gdb) 
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+产生信号量
+
+使用singal命令，可以产生一个信号量给被调试的程序。如：中断信号Ctrl+C。这非常方便于程序的调试，可以在程序运行的任意位置设置断点，并在该断点用GDB产生一个信号量，这种精确地在某处产生信号非常有利程序的调试。
+
+语法是：signal
+<singal>，UNIX的系统信号量通常从1到15。所以<singal>取值也在这个范围。
+
+signal命令和shell的kill命令不同，系统的kill命令发信号给被调试程序时，是由GDB截获的，而signal命令所发出一信号则是直接发给被调试程序的。 
+(gdb) list
+1       #include <stdio.h>
+2       #include <unistd.h>
+3       #include <signal.h>
+4       #include <errno.h>
+5
+6       int flag = 0;
+7
+8       void sig_int(int signum)
+9       {
+10              int err = errno;
+(gdb) list
+11              flag    = 1;
+12              errno   = err;
+13              return;
+14      }
+15
+16      int main(void)
+17      {
+18              int i;
+19      #if 1
+20              signal(SIGINT, sig_int);
+(gdb) list
+21      #endif
+22              for (i = 0; ; i++)
+23              {
+24                      sleep(1);
+25                      fprintf(stdout, "i :%d\n", i);
+26              }
+27
+28              return 0;
+29      }
+
+(gdb) start 
+Temporary breakpoint 1 at 0x4005ee: file signal_handle.c, line 20.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 1, main () at signal_handle.c:20
+20              signal(SIGINT, sig_int);
+(gdb) n
+22              for (i = 0; ; i++)
+(gdb) display flag 
+1: flag = 0
+(gdb) signal SIGINT
+Continuing with signal SIGINT.
+i :0
+i :1
+i :2
+
+Program received signal SIGTSTP, Stopped (user).
+0x000000347869a170 in __nanosleep_nocancel () from /lib64/libc.so.6
+1: flag = 1
+(gdb) n
+Single stepping until exit from function __nanosleep_nocancel, 
+which has no line number information.
+
+Program received signal SIGTSTP, Stopped (user).
+0x000000347869a170 in __nanosleep_nocancel () from /lib64/libc.so.6
+1: flag = 1
+(gdb) finish 
+Run till exit from #0  0x000000347869a170 in __nanosleep_nocancel () from
+/lib64/libc.so.6
+0x0000003478699fc4 in sleep () from /lib64/libc.so.6
+1: flag = 1
+(gdb) n
+Single stepping until exit from function sleep, 
+which has no line number information.
+main () at signal_handle.c:25
+25                      fprintf(stdout, "i :%d\n", i);
+1: flag = 1
+(gdb) 
+我们可以看到，当程序收到信号时，继续运行了，这是程序信号处理函数的正确执行结果，当我们再^+z停住程序并单步执行时，自动显示的值为在信号函数当中被设置过的值。
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+强制函数返回
+
+如果你的调试断点在某个函数中，并还有语句没有执行完。你可以使用return命令强制函数忽略还没有执行的语句并返回。
+
+return
+return <expression>
+   使用return命令取消当前函数的执行，并立即返回，如果指定了<expression>，那么该表达式的值会被认作函数的返回值。
+(gdb) list
+1       #include <stdio.h>
+2
+3       int watch_variable_another(void)
+4       {
+5               int k;
+6               for (k = 0; k < 5; k++)
+7               {
+8                       fprintf(stdout, "k:%d\n", k);
+9               }
+10              return 0;
+11      }
+12      int main(int argc, char *argv[])
+13      {
+14              int i, j = 0;
+15              int ret;
+16
+17              ret = watch_variable_another();
+18
+19              for (i = 0; i < 5; i++)
+20              {
+21                      fprintf(stdout, "i :%d,", i);
+22                      j++;
+23                      fprintf(stdout, "j :%d\n", j);
+24              }
+25
+26              return 0;
+27      }
+
+(gdb) start 
+Temporary breakpoint 1 at 0x400522: file pool4watch.c, line 14.
+Starting program: /mnt/data/gdb_debug_notes/source_code/a.out 
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffe9c8) at pool4watch.c:14
+14              int i, j = 0;
+(gdb) s
+17              ret = watch_variable_another();
+(gdb) s
+watch_variable_another () at pool4watch.c:6
+6               for (k = 0; k < 5; k++)
+(gdb) info locals 
+k = 0
+(gdb) info frame 
+Stack level 0, frame at 0x7fffffffe8c0:
+ rip = 0x4004e0 in watch_variable_another (pool4watch.c:6); saved rip 0x40052e
+ called by frame at 0x7fffffffe8f0
+ source language c.
+ Arglist at 0x7fffffffe8b0, args: 
+ Locals at 0x7fffffffe8b0, Previous frame's sp is 0x7fffffffe8c0
+ Saved registers:
+  rbp at 0x7fffffffe8b0, rip at 0x7fffffffe8b8
+(gdb) backtrace 
+#0  watch_variable_another () at pool4watch.c:6
+#1  0x000000000040052e in main (argc=1, argv=0x7fffffffe9c8) at
+pool4watch.c:17
+(gdb) up
+#1  0x000000000040052e in main (argc=1, argv=0x7fffffffe9c8) at
+pool4watch.c:17
+17              ret = watch_variable_another();
+(gdb) info locals 
+i = 32767
+j = 0
+ret = 0
+(gdb) down
+#0  watch_variable_another () at pool4watch.c:6
+6               for (k = 0; k < 5; k++)
+(gdb) return 1
+Make watch_variable_another return now? (y or n) y
+#0  0x000000000040052e in main (argc=1, argv=0x7fffffffe9c8)
+    at pool4watch.c:17
+17              ret = watch_variable_another();
+(gdb) info locals 
+i = 32767
+j = 0
+ret = 0
+(gdb) s
+19              for (i = 0; i < 5; i++)
+(gdb) info locals 
+i = 32767
+j = 0
+ret = 1
+(gdb) 
+我们看到我们手动的强制返回1之后，ret得到的结果为1。
+
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
