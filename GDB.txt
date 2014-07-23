@@ -2579,3 +2579,35 @@ ret = 1
 我们看到我们手动的强制返回1之后，ret得到的结果为1。
 
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+gdb打印宏值方法：
+gdb 中宏的操作
+默认编译的时候，调试过程是看不见宏的值的。编译时候需要给选项。
+gcc -gdwarf-2 -g3 -o test.c test
+gdb test
+察看宏（macro)命令： p macroname
+就像察看一个普通变量一样。如果只想看宏的展开形势，就用如下命令：
+macro expand macoroname
+
+example:
+make
+gcc -O2 -gdwarf-2 -g3   -c -o snmpwalk.o snmpwalk.c
+gcc -O2 -gdwarf-2 -g3 -o snmpwalk snmpwalk.o -lnetsnmp  
+gcc -O2 -gdwarf-2 -g3   -c -o snmpget.o snmpget.c
+gcc -O2 -gdwarf-2 -g3 -o snmpget snmpget.o -lnetsnmp  
+
+(gdb) list -
+143             fprintf(stderr, "Missing object name\n");
+144             usage();
+145             exit(1);
+146         }
+147         if ((argc - arg) > SNMP_MAX_CMDLINE_OIDS) {
+148             fprintf(stderr, "Too many object identifiers specified. ");
+149             fprintf(stderr, "Only %d allowed in one request.\n",
+SNMP_MAX_CMDLINE_OIDS);
+150             usage();
+151             exit(1);
+152         }
+(gdb) print SNMP_MAX_CMDLINE_OIDS
+$4 = 128
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
