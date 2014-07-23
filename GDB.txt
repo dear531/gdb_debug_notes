@@ -2611,3 +2611,79 @@ SNMP_MAX_CMDLINE_OIDS);
 $4 = 128
 
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+for循环执行过程：
+(gdb) list
+1       #include <stdio.h>
+2
+3       int main(int argc, char *argv[])
+4       {
+5               int i;
+6               for (i = 0;
+7                       i < 5;
+8                       i++)
+9                       fprintf(stdout, "i :%d\n", i);
+10
+(gdb) list
+11              return 0;
+12      }
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffe9a8) at
+for_pool_route.c:6
+6               for (i = 0;
+//第一次执行了初始化，而后每次都不执行了。
+//这样的调用过程需要代码段，是将初始化，循环条件和循环体分别分开各作一行的，详见程序list菜单。
+(gdb) n
+7                       i < 5;
+(gdb) n
+9                       fprintf(stdout, "i :%d\n", i);
+(gdb) n
+i :0
+8                       i++)
+(gdb) n
+7                       i < 5;
+(gdb) n
+9                       fprintf(stdout, "i :%d\n", i);
+(gdb) n
+i :1
+8                       i++)
+(gdb) n
+7                       i < 5;
+(gdb) n
+9                       fprintf(stdout, "i :%d\n", i);
+(gdb) n
+i :2
+8                       i++)
+(gdb) n
+7                       i < 5;
+(gdb) n
+9                       fprintf(stdout, "i :%d\n", i);
+(gdb) n
+i :3
+8                       i++)
+(gdb) n
+7                       i < 5;
+(gdb) n
+9                       fprintf(stdout, "i :%d\n", i);
+(gdb) n
+i :4
+8                       i++)
+(gdb) n
+7                       i < 5;
+(gdb) n
+11              return 0;
+(gdb) n
+12      }
+(gdb) n
+0x00002aaaaace5994 in __libc_start_main () from /lib64/libc.so.6
+(gdb) n
+Single stepping until exit from function __libc_start_main, 
+which has no line number information.
+
+Program exited normally.
+(gdb) n
+The program is not being run.
+(gdb) n
+The program is not being run.
+(gdb) quit
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
