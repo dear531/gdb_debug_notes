@@ -2687,3 +2687,29 @@ The program is not being run.
 (gdb) quit
 
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+打印数据类型：
+(gdb) ptype cli->history 
+type = char *[256]
+
+(gdb) ptype cli
+type = struct cli_def {
+    int completion_callback;
+    struct cli_command *commands;
+    struct cli_command *folder;
+    struct cli_command *enable;
+    int language;
+    int (*enable_callback)(char *);
+    char *enable_password;
+    char *history[256];
+    char showprompt;
+    char *modestring;
+    int privilege;
+    int mode;
+    int state;
+    FILE *client;
+    char *commandname;
+    char *buffer;
+    unsigned int buf_size;
+} *
+ptype是print type的组合，打印变量属性
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
