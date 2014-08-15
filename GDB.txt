@@ -2713,3 +2713,76 @@ type = struct cli_def {
 } *
 ptype是print type的组合，打印变量属性
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+设置gdb记录历史命令：
+在当前用户的.gdbinit隐藏的默认配置文件下，配置gdb如下：
+以下是在网上找到的方法
+cat << ! >> ~/.gdbinit:这句是写当前用户的.gdbinit文件，并以！结束输入。
+
+好像用 readline 库的程序都是可以保存命令历史的 默认名字是 .gdb_history
+cat << ! >> ~/.gdbinit
+> set history save
+> set history expansion
+> !
+
+然后随便开启gdb，在gdb下输入写个命令，命令就会被保存在~/.gdb_history文件里。
+[root@zhangly ~]# cat /root/.gdb_history 
+start 
+quit
+quit
+quit
+info gdb Invocation 'Logging Output'
+info gdb Invocation 'Logging Output'
+set logging on
+quit
+quit
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+设置gdb记录经历的代码记录log：
+[root@zhangly demo]# gdb ./a.out 
+GNU gdb (GDB) Red Hat Enterprise Linux (7.0.1-23.el5)
+Copyright (C) 2009 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from /home/zhangly/demo/a.out...done.
+(gdb) set logging on		//开启日志
+Copying output to gdb.txt.	//提示日志文件名
+(gdb) start 
+Temporary breakpoint 1 at 0x400537: file gdb_attach_detach.c, line 7.
+Starting program: /home/zhangly/demo/a.out 
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffe9f8) at
+gdb_attach_detach.c:7
+7               for (i = 0; i < 100000; i++) {
+(gdb) s
+8                       sleep(1);
+(gdb) s
+quit9                   fprintf(stdout, "i:%d\n", i);
+(gdb) quit
+A debugging session is active.
+
+        Inferior 1 [process 20540] will be killed.
+
+Quit anyway? (y or n) y
+
+
+查看文件当中的历史内容：
+[root@zhangly demo]# cat gdb.txt 
+
+Temporary breakpoint 1 at 0x400537: file gdb_attach_detach.c, line 7.
+Starting program: /home/zhangly/demo/a.out 
+
+Temporary breakpoint 1, main (argc=1, argv=0x7fffffffe9f8) at
+gdb_attach_detach.c:7
+7               for (i = 0; i < 100000; i++) {
+8                       sleep(1);
+9                       fprintf(stdout, "i:%d\n", i);
+A debugging session is active.
+
+        Inferior 1 [process 22601] will be killed.
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
