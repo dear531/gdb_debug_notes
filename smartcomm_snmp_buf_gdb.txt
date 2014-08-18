@@ -1,0 +1,132 @@
+Already logging to gdb.txt.
+Breakpoint 1 at 0x42d5f9: file dependence.c, line 1094.
+Continuing.
+Detaching after fork from child process 6917.
+Detaching after fork from child process 6920.
+Detaching after fork from child process 6921.
+Detaching after fork from child process 6922.
+Detaching after fork from child process 6923.
+Detaching after fork from child process 6924.
+Detaching after fork from child process 6925.
+Detaching after fork from child process 6926.
+Detaching after fork from child process 6928.
+Detaching after fork from child process 6931.
+Detaching after fork from child process 6933.
+Detaching after fork from child process 6938.
+Detaching after fork from child process 6942.
+Detaching after fork from child process 6944.
+Detaching after fork from child process 6948.
+Detaching after fork from child process 6953.
+Detaching after fork from child process 6955.
+Detaching after fork from child process 6956.
+Detaching after fork from child process 6963.
+Detaching after fork from child process 6964.
+Detaching after fork from child process 6965.
+Detaching after fork from child process 6966.
+Detaching after fork from child process 6967.
+Detaching after fork from child process 6968.
+Detaching after fork from child process 6969.
+Detaching after fork from child process 6971.
+Detaching after fork from child process 6974.
+Detaching after fork from child process 6976.
+Detaching after fork from child process 6981.
+Detaching after fork from child process 6984.
+Detaching after fork from child process 6987.
+Detaching after fork from child process 6991.
+Detaching after fork from child process 6996.
+Detaching after fork from child process 6998.
+Detaching after fork from child process 7001.
+Detaching after fork from child process 7002.
+Detaching after fork from child process 7003.
+Detaching after fork from child process 7004.
+Detaching after fork from child process 7005.
+Detaching after fork from child process 7006.
+Detaching after fork from child process 7007.
+Detaching after fork from child process 7009.
+
+Breakpoint 1, check_routable_address (ip=0x7fff3102b8a0 "0.0.0.0", route=0x0) at dependence.c:1094
+1094		if (strcmp(ip, "0.0.0.0") == 0 || strcmp(ip, "::")==0 ) {
+#0  check_routable_address (ip=0x7fff3102b8a0 "0.0.0.0", route=0x0) at dependence.c:1094
+#1  0x0000000000460a8b in realserver_execute (list=0xd46b0c0, rs_list=0xd4611a0, op=0) at apppool.c:987
+#2  0x0000000000428a69 in module_add_sub (m_name=0x4928e9 "apppool", name=0x7fff3102cda0 "pa", sub_mname=0x4928de "realserver", 
+    value=0x7fff3102bd00 "emory=80:") at module.c:458
+#3  0x000000000045cb23 in add_realserver_to_apppool (poolname=0x7fff3102cda0 "pa", 
+    value=0x7fff3102c1a0 "192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80") at apppool.c:132
+#4  0x0000000000407777 in analyzer_system_pool (
+    cmdarg=0x7fff3102de8c "pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:578
+#5  0x0000000000407eb0 in run_match_analyzer (queue=0x6a7d80, 
+    cmdarg=0x7fff3102de87 "pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:656
+#6  0x000000000040f2b3 in analyzer_system (
+    cmdarg=0x7fff3102de87 "pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:2518
+#7  0x0000000000407eb0 in run_match_analyzer (queue=0x6a7d70, 
+    cmdarg=0x7fff3102de80 "system pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:656
+#8  0x000000000040f545 in analyzer_entrance (
+    cmdarg=0x7fff3102de80 "system pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:2605
+#9  0x00000000004136ed in callback_connection (epfd=6, fd=8, e=0xd453230) at daemon4.c:105
+#10 0x000000000043080c in event_dispatch_loop (epfd=6) at event.c:96
+#11 0x0000000000413bcb in childrunning () at daemon4.c:273
+#12 0x0000000000413cc4 in start_child_process () at daemon4.c:331
+#13 0x0000000000413d0a in signal_chld (signo=17) at daemon4.c:346
+#14 <signal handler called>
+#15 0x0000003fd4e9a470 in __nanosleep_nocancel () from /lib64/libc.so.6
+#16 0x0000003fd4e9a2c4 in sleep () from /lib64/libc.so.6
+#17 0x0000000000413f5a in main (argc=1, argv=0x7fff31035698) at daemon4.c:450
+#0  check_routable_address (ip=0x7fff3102b8a0 "0.0.0.0", route=0x0) at dependence.c:1094
+#1  0x0000000000460a8b in realserver_execute (list=0xd46b0c0, rs_list=0xd4611a0, op=0) at apppool.c:987
+#2  0x0000000000428a69 in module_add_sub (m_name=0x4928e9 "apppool", name=0x7fff3102cda0 "pa", sub_mname=0x4928de "realserver", 
+    value=0x7fff3102bd00 "emory=80:") at module.c:458
+#3  0x000000000045cb23 in add_realserver_to_apppool (poolname=0x7fff3102cda0 "pa", 
+    value=0x7fff3102c1a0 "192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80") at apppool.c:132
+#4  0x0000000000407777 in analyzer_system_pool (
+    cmdarg=0x7fff3102de8c "pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:578
+#5  0x0000000000407eb0 in run_match_analyzer (queue=0x6a7d80, 
+    cmdarg=0x7fff3102de87 "pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:656
+#6  0x000000000040f2b3 in analyzer_system (
+    cmdarg=0x7fff3102de87 "pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:2518
+#7  0x0000000000407eb0 in run_match_analyzer (queue=0x6a7d70, 
+    cmdarg=0x7fff3102de80 "system pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:656
+#8  0x000000000040f545 in analyzer_entrance (
+    cmdarg=0x7fff3102de80 "system pool pa add realserver 192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=zhangliuying,password=zhangliuying,cpu=20,memory=80", e=0xd453230) at analyzer.c:2605
+#9  0x00000000004136ed in callback_connection (epfd=6, fd=8, e=0xd453230) at daemon4.c:105
+#10 0x000000000043080c in event_dispatch_loop (epfd=6) at event.c:96
+#11 0x0000000000413bcb in childrunning () at daemon4.c:273
+#12 0x0000000000413cc4 in start_child_process () at daemon4.c:331
+#13 0x0000000000413d0a in signal_chld (signo=17) at daemon4.c:346
+#14 <signal handler called>
+#15 0x0000003fd4e9a470 in __nanosleep_nocancel () from /lib64/libc.so.6
+#16 0x0000003fd4e9a2c4 in sleep () from /lib64/libc.so.6
+#17 0x0000000000413f5a in main (argc=1, argv=0x7fff31035698) at daemon4.c:450
+A debugging session is active.
+
+	Inferior 1 [process 4932] will be detached.
+
+Quit anyway? (y or n) Detaching from program: /SmartGrid/shell/daemon4, process 4932
+
+Breakpoint 4, add_realserver_to_apppool (poolname=0x7fff3102cda0 "pa", 
+    value=0x7fff3102c1a0 "192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=1234567890,password=1234567890,cpu=20,memory=80") at apppool.c:113
+113             int ret = 0;
+(gdb) s
+122             if (value[0] == '[') {
+(gdb) s
+127                     sscanf(value, "%[^,] %s", ipaddr, args);
+(gdb) s
+129                     get_batch_ip_port(ipaddr, ip_min, ip_max);
+(gdb) print ipaddr
+$26 = "y=80\000\066\070.12.78:80", '\000' <repeats 64 times>"\246, ", '\000' <repeats 207 times>, "P\354`\325?\000\000\000 \277\002\061\377\177", '\000' <repeats 50 times>, "0\000\000\000\060\000\000\000 \301\002\061\377\177\000\000`\300\002\061\377\177", '\000' <repeats 66 times>, " \277\002\061\377\177\000\000\214\336\002\061\377\177\000\000 \277\002\061\377\177\000\000\000\000\000\000\000\000\000\000\062\337\002\061\377\177\000\000\000\000\000\000\000\000\000\000\300T\003\061\377\177\000\000\214\336\002\061\377\177\000\000@\300\002\061\377\177\000\000\314\020H", '\000' <repeats 13 times>"\260, \321\002\061\377\177\000\000\265.\346\324?\000\000\000\001\200\255\373\000\000\000\000\062\337\002\061\377\177\000\000\062\337\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002"...
+(gdb) print value
+$27 = 0x7fff3102c1a0 "192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=1234567890,password=1234567890,cpu=20,memory=80"
+(gdb) print ipaddr
+$28 = "y=80\000\066\070.12.78:80", '\000' <repeats 64 times>"\246, ", '\000' <repeats 207 times>, "P\354`\325?\000\000\000 \277\002\061\377\177", '\000' <repeats 50 times>, "0\000\000\000\060\000\000\000 \301\002\061\377\177\000\000`\300\002\061\377\177", '\000' <repeats 66 times>, " \277\002\061\377\177\000\000\214\336\002\061\377\177\000\000 \277\002\061\377\177\000\000\000\000\000\000\000\000\000\000\062\337\002\061\377\177\000\000\000\000\000\000\000\000\000\000\300T\003\061\377\177\000\000\214\336\002\061\377\177\000\000@\300\002\061\377\177\000\000\314\020H", '\000' <repeats 13 times>"\260, \321\002\061\377\177\000\000\265.\346\324?\000\000\000\001\200\255\373\000\000\000\000\062\337\002\061\377\177\000\000\062\337\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002\061\377\177\000\000\214\336\002"...
+(gdb) s
+get_batch_ip_port (addr=0x7fff3102bd00 "y=80", ip_min=0x7fff3102bc00 "", ip_max=0x7fff3102bb80 "")
+    at common.c:521
+521             sscanf(addr, "%[^:] :%s", ip, port);
+(gdb) print &ipaddr
+No symbol "ipaddr" in current context.
+(gdb) up
+#1  0x000000000045cacb in add_realserver_to_apppool (poolname=0x7fff3102cda0 "pa", 
+    value=0x7fff3102c1a0 "192.168.12.78:80,weight=10,enable=on,snmp_version=3,authProtocol=md5,securelevel=authNoPriv,username=1234567890,password=1234567890,cpu=20,memory=80") at apppool.c:129
+129                     get_batch_ip_port(ipaddr, ip_min, ip_max);
+(gdb) print &ipaddr
+$29 = (char (*)[1024]) 0x7fff3102bd00
+(gdb) 
